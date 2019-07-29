@@ -19,12 +19,6 @@ if (settings.planetos_key === undefined) {
 
 mapboxgl.accessToken = settings.mapbox_key; // pk.eyJ1IjoiYm9sa2hvdnNreSIsImEiOiJDZ0Nuc2tNIn0.lZxQdQsCzIU76syFmJ8MNA
 
-//LngLat
-//12d1'35.89"E 60d34'58.31"N
-//12d1'35.89"E 56d28'49.70"N
-//27d48'29.66"E 60d34'58.31"N
-//27d48'29.66"E 56d28'49.70"N
-
 var mapStyle = {
   "version": 8,
   "name": "Dark",
@@ -35,7 +29,7 @@ var mapStyle = {
     },
     "overlay": {
       "type": "image",
-      "url": "1.png",
+      "url": "img/1.png",
       "coordinates": [
         [12.026, 60.582],
         [12.026, 56.480],
