@@ -16,62 +16,47 @@ if (settings.planetos_key === undefined) {
     console.log('Can not find "planetos_key" in current URL, please add "&planetos_key=<your_key>" to this URL.');
 }
 
+var frameCount = 3;
+var currentImage = 1;
+ 
+function getPath() {
+  return "https://gallant-albattani-48f0af.netlify.com/img/" + currentImage + ".png";
+}
 
 mapboxgl.accessToken = settings.mapbox_key; // pk.eyJ1IjoiYm9sa2hvdnNreSIsImEiOiJDZ0Nuc2tNIn0.lZxQdQsCzIU76syFmJ8MNA
 
-var mapStyle = {
-  "version": 8,
-  "name": "Dark",
-  "sources": {
-    "mapbox": {
-      "type": "vector",
-      "url": "mapbox://mapbox.mapbox-streets-v8"
-    },
-    "overlay": {
-      "type": "image",
-      "url": "img/1.png",
-      "coordinates": [
-        [12.026, 60.582],
-        [27.808, 60.583],
-        [27.808, 56.480],
-        [12.026, 56.480]
-      ]
-    }
-  },
-  "sprite": "mapbox://sprites/mapbox/dark-v10",
-  "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-  "layers": [
-    {
-      "id": "background",
-      "type": "background",
-      "paint": {"background-color": "#111"}
-    },
-    {
-      "id": "water",
-      "source": "mapbox",
-      "source-layer": "water",
-      "type": "fill",
-      "paint": {"fill-color": "#2c2c2c"}
-    },
-    {
-      "id": "boundaries",
-      "source": "mapbox",
-      "source-layer": "admin",
-      "type": "line",
-      "paint": {"line-color": "#797979", "line-dasharray": [2, 2, 6, 2]},
-      "filter": ["all", ["==", "maritime", 0]]
-    },
-    {
-      "id": "overlay",
-      "source": "overlay",
-      "type": "raster",
-      "paint": {"raster-opacity": 0.85}
-    },
-  ]
-  };
-  var map = new mapboxgl.Map({
+
+var map = new mapboxgl.Map({
   container: 'map', // container id
-  style: mapStyle,
+  style: 'mapbox://styles/mapbox/dark-v10',
   center: [19.5, 56.5], // starting position
-  zoom: 6 // starting zoom
+  zoom: 5 // starting zoom
+});
+
+map.on('load', function() {
+ 
+  map.addSource("radar", {
+    type: "image",
+    url: getPath(),
+    coordinates: [
+      [12.026, 60.582],
+      [27.808, 60.583],
+      [27.808, 56.480],
+      [12.026, 56.480]
+    ]
+  });
+
+  map.addLayer({
+    id: "radar-layer",
+      "type": "raster",
+      "source": "radar",
+      "paint": {
+      "raster-fade-duration": 0
+    }
+  });
+   
+  setInterval(function() {
+    currentImage = (currentImage + 1) % frameCount;
+    map.getSource("radar").updateImage({ url: getPath() });
+  }, 200);
 });
